@@ -6,7 +6,7 @@ const App = {
 	data() {
 		return {
 			meetupId: 0,
-			activeMeetup: '',
+			activeMeetup: {},
 		};
 	},
 	watch: {
