@@ -6,7 +6,7 @@
 
 <script>
 export default {
-  name: 'UiContainer',
+  name: 'UiContainer'
 };
 </script>
 
