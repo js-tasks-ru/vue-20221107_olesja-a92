@@ -8,17 +8,13 @@
 
 <script>
 import TheToaster from './components/TheToaster.vue';
-
 export default {
   name: 'App',
-
   components: { TheToaster },
-
   methods: {
     handleSuccessClick() {
       this.$refs.toaster.success('Success ' + new Date().toLocaleTimeString());
     },
-
     handleErrorClick() {
       this.$refs.toaster.error('Error ' + new Date().toLocaleTimeString());
     },
