@@ -1,18 +1,14 @@
 <template>
-  <div class="dropdown dropdown_opened">
-    <button type="button" class="dropdown__toggle dropdown__toggle_icon">
-      <ui-icon icon="tv" class="dropdown__icon" />
-      <span>Title</span>
+  <div class="dropdown" :class="{'dropdown_opened':opened}">
+    <button type="button" @click="open" class="dropdown__toggle" :class="{'dropdown__toggle_icon':haveIcon}">
+      <ui-icon v-if="activeOption.icon" :icon="activeOption.icon" class="dropdown__icon" />
+      <span>{{ activeOption.text }}</span>
     </button>
 
-    <div class="dropdown__menu" role="listbox">
-      <button class="dropdown__item dropdown__item_icon" role="option" type="button">
-        <ui-icon icon="tv" class="dropdown__icon" />
-        Option 1
-      </button>
-      <button class="dropdown__item dropdown__item_icon" role="option" type="button">
-        <ui-icon icon="tv" class="dropdown__icon" />
-        Option 2
+    <div v-show="opened" class="dropdown__menu" role="listbox">
+      <button v-for="option in options" @click="select(option.value)" class="dropdown__item" :class="{'dropdown__item_icon':haveIcon}" role="option" type="button">
+        <ui-icon v-if="option.icon" :icon="option.icon" class="dropdown__icon" />
+        {{ option.text }}
       </button>
     </div>
   </div>
@@ -23,7 +19,48 @@ import UiIcon from './UiIcon';
 
 export default {
   name: 'UiDropdown',
-
+  props: {
+    options: {
+      type: Array,
+      required: true,
+    },
+	modelValue: String,
+	title: {
+	  type: String,
+      required: true,
+	}
+  },
+  data() {
+      return {
+		opened: false,
+		activeOption: {},
+      }
+    },
+  computed: {
+	haveIcon: function () {
+        var isIcon = false;
+		this.options.map(option=> isIcon = option.icon?true:isIcon);
+		return isIcon;
+    }
+  },
+  watch: {
+		modelValue: function (val) {
+	       this.activeOption = this.options.filter(option => option.value==val)[0];
+		}
+  },
+  created(){
+	  if(this.modelValue) this.activeOption = this.options.filter(option => option.value==this.modelValue)[0];
+	  else this.activeOption = {'text':this.title,'value':'','icon':''};
+  },
+  methods: {
+	  open(){
+		 this.opened = this.opened?false:true;
+	  },
+	  select(val){
+		 this.$emit('update:modelValue', val);
+		 this.opened = false;
+	  }
+	},
   components: { UiIcon },
 };
 </script>
